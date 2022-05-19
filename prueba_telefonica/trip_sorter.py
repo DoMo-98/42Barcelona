@@ -1,17 +1,15 @@
 # coding: utf-8
 # Your code here!
 
-class   Boarding_card:
+class Boarding_card:
     
-    def __init__( self, source, destination, way, seat="", gate="", baggage="" ):
+    def __init__( self, source, destination, way, seat="" ):
         self.source = source
         self.destination = destination
         self.next = None
         self.prev = None
         self.way = way
         self.seat = seat
-        self.gate = gate
-        self.baggage = baggage
         
     def set_next(self, next):
         self.next = next
@@ -35,17 +33,20 @@ class   Boarding_card:
     #     print(f"From {self.source} to {self.destination}")
     
     def print_info(self):
-        str = ""
-        
-        if "flight" in self.way:
-            str = f"From {self.source}, take {self.way} to {self.destination}. Gate {self.gate}, seat {self.seat}. "
-            str += f"Baggage {'will we automatically transferred from your last leg' if not self.baggage else f'drop at {self.baggage}'}."
-        else:
-            str = f"Take {self.way} from {self.source} to {self.destination}. "
-            str += f"{'No seat assignment' if not self.seat else f'Sit in seat {self.seat}'}."
-            
+        str = f"Take {self.way} from {self.source} to {self.destination}. "
+        str += f"{'No seat assignment' if not self.seat else f'Sit in seat {self.seat}'}."
         print(str)
         
+class Flight_card(Boarding_card):
+    def __init__( self, source, destination, way, seat="", gate="", baggage="" ):
+        super().__init__( source, destination, way, seat )
+        self.gate = gate
+        self.baggage = baggage
+        
+    def print_info(self):
+        str = f"From {self.source}, take {self.way} to {self.destination}. Gate {self.gate}, seat {self.seat}. "
+        str += f"Baggage {'will we automatically transferred from your last leg' if not self.baggage else f'drop at {self.baggage}'}."
+        print(str)
 
 def print_cards( card_pointer ):
     while card_pointer:
@@ -81,8 +82,8 @@ def sort_cards( card_list ):
 def main():
     card0 = Boarding_card(source="Madrid", destination="Barcelona", way="train 78A", seat="45B")
     card1 = Boarding_card(source="Barcelona", destination="Gerona Airport", way="airport bus")
-    card2 = Boarding_card(source="Gerona Airport", destination="Stockholm", way="flight SK455", gate="45B", seat="3A", baggage="ticket counter 344")
-    card3 = Boarding_card(source="Stockholm", destination="New York JFK", way="flight SK22", gate="7B", seat="3A")
+    card2 = Flight_card(source="Gerona Airport", destination="Stockholm", way="flight SK455", gate="45B", seat="3A", baggage="ticket counter 344")
+    card3 = Flight_card(source="Stockholm", destination="New York JFK", way="flight SK22", gate="7B", seat="3A")
     
     card_list = []
     card_list.append(card2)
