@@ -37,8 +37,9 @@ class Boarding_card:
         str += f"{'No seat assignment' if not self.seat else f'Sit in seat {self.seat}'}."
         print(str)
         
+        
 class Flight_card(Boarding_card):
-    def __init__( self, source, destination, way, seat="", gate="", baggage="" ):
+    def __init__( self, source, destination, way, seat, gate, baggage="" ):
         super().__init__( source, destination, way, seat )
         self.gate = gate
         self.baggage = baggage
@@ -47,6 +48,7 @@ class Flight_card(Boarding_card):
         str = f"From {self.source}, take {self.way} to {self.destination}. Gate {self.gate}, seat {self.seat}. "
         str += f"Baggage {'will we automatically transferred from your last leg' if not self.baggage else f'drop at {self.baggage}'}."
         print(str)
+
 
 def print_cards( card_pointer ):
     while card_pointer:
@@ -79,19 +81,44 @@ def sort_cards( card_list ):
     
     return None
     
+def parse_card_list( card_list ):
+    parsed_card_list = []
+    
+    for card in card_list:
+        if "flight" in card["way"]:
+            parsed_card_list.append(
+                Flight_card(    source = card["source"] if "source" in card else "",
+                                destination = card["destination"] if "destination" in card else "",
+                                way = card["way"] if "way" in card else "",
+                                seat = card["seat"] if "seat" in card else "",
+                                gate = card["gate"] if "gate" in card else "",
+                                baggage = card["baggage"] if "baggage" in card else ""
+                            )
+            )
+        else:
+            parsed_card_list.append(
+                Boarding_card(  source = card["source"] if "source" in card else "",
+                                destination = card["destination"] if "destination" in card else "",
+                                way = card["way"] if "way" in card else "",
+                                seat = card["seat"] if "seat" in card else ""
+                            )
+            )
+    
+    return parsed_card_list
+    
 def main():
-    card0 = Boarding_card(source="Madrid", destination="Barcelona", way="train 78A", seat="45B")
-    card1 = Boarding_card(source="Barcelona", destination="Gerona Airport", way="airport bus")
-    card2 = Flight_card(source="Gerona Airport", destination="Stockholm", way="flight SK455", gate="45B", seat="3A", baggage="ticket counter 344")
-    card3 = Flight_card(source="Stockholm", destination="New York JFK", way="flight SK22", gate="7B", seat="3A")
+    trip0 = {"source":"Madrid", "destination":"Barcelona", "way":"train 78A", "seat":"45B"}
+    trip1 = {"source":"Barcelona", "destination":"Gerona Airport", "way":"airport bus"}
+    trip2 = {"source":"Gerona Airport", "destination":"Stockholm", "way":"flight SK455", "gate":"45B", "seat":"3A", "baggage":"ticket counter 344"}
+    trip3 = {"source":"Stockholm", "destination":"New York JFK", "way":"flight SK22", "gate":"7B", "seat":"3A"}
     
     card_list = []
-    card_list.append(card2)
-    card_list.append(card3)
-    card_list.append(card1)
-    card_list.append(card0)
+    card_list.append(trip2)
+    card_list.append(trip3)
+    card_list.append(trip1)
+    card_list.append(trip0)
     
-    print_cards( sort_cards(card_list) )
+    print_cards( sort_cards( parse_card_list( card_list ) ) )
     
     print("You have arrived at your final destination.")
     
