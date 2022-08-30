@@ -14,6 +14,6 @@ def run():
     card_list.append( trip1 )
     card_list.append( trip0 )
     
-    print_cards( sort_cards( parse_card_list( card_list ) ) )
+    sort_and_print_cards( *parse_card_list( card_list ) )
     
     print( "You have arrived at your final destination." )
